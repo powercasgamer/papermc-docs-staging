@@ -49,7 +49,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: "papermc-docs"
+          projectName: "papermc-staging-docs-pr-directupload-test"
           deploymentName: "Preview"
           directory: "build"
       - name: "add comment"
