@@ -52,6 +52,7 @@ jobs:
           projectName: "papermc-staging-docs-pr-directupload-test"
           deploymentName: "Preview"
           directory: "build"
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: "add comment"
         uses: "mshick/add-pr-comment@v2"
         with:
