@@ -6,7 +6,7 @@ import "../css/projects.css";
 
 const projects: Project[] = [
   {
-    title: "Paper",
+    title: "Papier",
     description:
       "High performance Minecraft server that aims to fix gameplay and mechanics inconsistencies.",
     repo: "PaperMC/Paper",
