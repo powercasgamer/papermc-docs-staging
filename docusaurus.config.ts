@@ -31,7 +31,7 @@ const docsCommon: Options = {
 };
 
 const config: Config = {
-  title: "PaperMC Docs",
+  title: "FoliaMC Docs",
   tagline:
     "Documentation for all projects under the PaperMC umbrella, including Paper, Velocity, and Waterfall.",
   url: url,
