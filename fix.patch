@@ -1,0 +1,60 @@
+Subject: [PATCH] fix: correct base URL for Pages deployments
+---
+Index: .github/workflows/deploy-pr.yaml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.github/workflows/deploy-pr.yaml b/.github/workflows/deploy-pr.yaml
+--- a/.github/workflows/deploy-pr.yaml	(revision c50cae7b3130455999ee02be7cd22d77e21381f7)
++++ b/.github/workflows/deploy-pr.yaml	(revision 83fe1d345774d382cf2e82d9586a32961d230f69)
+@@ -27,6 +27,9 @@
+         run: "pnpm install"
+       - name: "build"
+         run: "pnpm run build"
++        env:
++          CI_ENV: preview
++          GITHUB_PR_HEAD_OWNER: ${{ github.event.pull_request.head.repo.owner.login }}
+       - name: "copy cloudflare configuration files to build directory"
+         run: |
+           cp _headers build/
+Index: .github/workflows/deploy.yaml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.github/workflows/deploy.yaml b/.github/workflows/deploy.yaml
+--- a/.github/workflows/deploy.yaml	(revision c50cae7b3130455999ee02be7cd22d77e21381f7)
++++ b/.github/workflows/deploy.yaml	(revision 83fe1d345774d382cf2e82d9586a32961d230f69)
+@@ -28,6 +28,8 @@
+         run: "pnpm install"
+       - name: "build"
+         run: "pnpm run build"
++        env:
++          CI_ENV: production
+       - name: "copy cloudflare configuration files to build directory"
+         run: |
+           cp _headers build/
+Index: docusaurus.config.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/docusaurus.config.ts b/docusaurus.config.ts
+--- a/docusaurus.config.ts	(revision c50cae7b3130455999ee02be7cd22d77e21381f7)
++++ b/docusaurus.config.ts	(revision 83fe1d345774d382cf2e82d9586a32961d230f69)
+@@ -14,10 +14,11 @@
+   getFileCommitHashSafe,
+ } from "./src/util/authorUtils";
+ 
+-const preview = env.CF_PAGES_BRANCH !== "main";
+-cacheAuthorData(preview || process.env.NODE_ENV === "development");
++const preview = isCI && env.CI_ENV === "preview";
++cacheAuthorData(preview || env.NODE_ENV === "development");
+ 
+-const url = (preview && `https://${env.CF_PAGES_URL}`) || "https://docs.papermc.io";
++const pagesId = `${env.GITHUB_PR_HEAD_OWNER}-${env.GITHUB_HEAD_REF || env.GITHUB_REF_NAME}`.substring(0, 28);
++const url = (preview && `https://${pagesId}.papermc-docs.pages.dev`) || "https://docs.papermc.io";
+ 
+ const docsCommon: Options = {
+   breadcrumbs: true,
